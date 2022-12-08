@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="digest_digest_view_form_inherit" model="ir.ui.view">
+        <field name="name">digest.digest.view.form.inherit</field>
+        <field name="model">digest.digest</field>
+        <field name="inherit_id" ref="digest.digest_digest_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='kpi_mail_message_total']" position="after">
+                <field name="kpi_quote"/>
+                <field name="kpi_new_client"/>
+                <!-- <field name="kpi_bank_account"/> -->
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>
