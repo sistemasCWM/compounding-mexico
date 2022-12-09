@@ -116,7 +116,7 @@
                         </div>
                         <div class="kpi_cell_center" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
                             <div>
-                                $<t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[1]"/>
+                                <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[1]"/>
                             </div>
                         </div>
                         <div class="kpi_trick" />
