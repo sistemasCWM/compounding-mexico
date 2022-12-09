@@ -90,37 +90,7 @@ class Digest(models.Model):
 
     def _compute_kpi_bank_account_value(self):
         
-        """
-        # self.kpi_bank_account_value = 789
-
-        account_journal = account.account_journal()
-        
-        bank_account = account_journal.get_journal_dashboard_datas['account_balance']
-
-        for record in self:
-            start, end, company = record._get_kpi_compute_parameters()
-            # bank_account = self.env['sale.order'].search_count([('state', '=', 'sent'), ('date_order', '>=', start), ('date_order', '<', end)])
-            record.kpi_bank_account_value =
-        """
-        
-        # print(self)
-        balances = []
-
-        accounts = self.env['account.journal'].search([['type', '=', 'bank']])
-
-        for account in accounts:
-        
-            balances.append([
-                account.name,
-                account._get_journal_bank_account_balance()[0]
-            ])
-        
-        # print(balances)
-        
-
-        # self.kpi_bank_account_value = 789
-
-        return balances
+        return [[x.name, "{:.2f}".format(x._get_journal_bank_account_balance()[0])] for x in self.env['account.journal'].search([['type', '=', 'bank']])]
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
         print('En el método >def _action_send_to_user(self, user, tips_count=1, consum_tips=True):< heredado')
