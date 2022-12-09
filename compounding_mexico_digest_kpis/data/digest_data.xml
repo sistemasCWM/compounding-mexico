@@ -109,6 +109,16 @@
                             <!-- <span style="vertical-align: left;">Balances of Bank Accounts</span> -->
                             <!-- <a t-if="kpi_info['kpi_action']" t-att-href="'/web#action=%s' % kpi_info['kpi_action']"><span class="button" id="button_open_report">Open Report</span></a> -->
                         </div>
+                        <!-- <div class="kpi_cell_border" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
+                            <div>
+                                <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[0]"/>
+                            </div>
+                        </div>
+                        <div class="kpi_cell_center" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
+                            <div>
+                                <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[1]"/>
+                            </div>
+                        </div> -->
                         <div class="kpi_cell_border" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
                             <div>
                                 <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[0]"/>
@@ -119,6 +129,16 @@
                                 <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[1]"/>
                             </div>
                         </div>
+                        <!-- <div class="kpi_cell_border" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
+                            <div t-foreach="bank_balances" t-as="bank_balance">
+                                <div t-esc="bank_balance[0]"></div>
+                            </div>
+                        </div>
+                        <div class="kpi_cell_center" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
+                            <div t-foreach="bank_balances" t-as="bank_balance">
+                                <div t-esc="bank_balance[1]"></div>
+                            </div>
+                        </div> -->
                         <div class="kpi_trick" />
                     </div>
                 </div>
