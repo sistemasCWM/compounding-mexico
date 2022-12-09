@@ -20,6 +20,7 @@
         'digest',
         'sale_management',
         'account',
+        'account_accountant'
     ],
     'data': [
         'data/digest_data.xml',

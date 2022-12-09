@@ -90,7 +90,7 @@ class Digest(models.Model):
 
     def _compute_kpi_bank_account_value(self):
         
-        return [[x.name, "{:.2f}".format(x._get_journal_bank_account_balance()[0])] for x in self.env['account.journal'].search([['type', '=', 'bank']])]
+        return [[x.name, "{0:,.2f}".format(x._get_journal_bank_account_balance()[0])] for x in self.env['account.journal'].search([['type', '=', 'bank']])]
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
         print('En el método >def _action_send_to_user(self, user, tips_count=1, consum_tips=True):< heredado')
