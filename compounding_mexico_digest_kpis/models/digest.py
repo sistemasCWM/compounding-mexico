@@ -90,11 +90,76 @@ class Digest(models.Model):
 
     def _compute_kpi_bank_account_value(self):
         
+        """
+        # self.kpi_bank_account_value = 789
+
+        account_journal = account.account_journal()
+        
+        bank_account = account_journal.get_journal_dashboard_datas['account_balance']
+
+        for record in self:
+            start, end, company = record._get_kpi_compute_parameters()
+            # bank_account = self.env['sale.order'].search_count([('state', '=', 'sent'), ('date_order', '>=', start), ('date_order', '<', end)])
+            record.kpi_bank_account_value =
+        """
+        
+        # print(self)
+
+        """
+        
+        balances = []
+
+        accounts = self.env['account.journal'].search([['type', '=', 'bank']])
+
+        for account in accounts:
+        
+            balances.append([
+                account.name,
+                account._get_journal_bank_account_balance()[0]
+            ])
+        
+        # print(balances)
+        
+
+        # self.kpi_bank_account_value = 789
+
+        return balances
+
+        """
+
         return [[x.name, '$' + "{0:,.2f}".format(x._get_journal_bank_account_balance()[0])] for x in self.env['account.journal'].search([['type', '=', 'bank']])]
 
+    def _compute_leaderboard_value(self):
+
+        leaderboard = []
+
+        salespeople = self.env['res.users'].search([['sale_team_id', '!=', False]])
+
+        # print(salespeople)
+
+        for salesperson in salespeople:
+
+            # print(self.env['res.partner'].search([['user_id', '=', salesperson.id]]).name)
+            # print(len(self.env['res.partner'].search([['user_id', '=', salesperson.id]])))
+
+            # print(salesperson.id)
+            # print(len(self.env['sale.order'].search([['user_id', '=', salesperson.id]])))
+
+            leaderboard.append([
+                # self.env['res.partner'].search([['user_id', '=', salesperson.id]]).name
+                # salesperson.id
+                # self.env['res.users'].search([['sale_team_id', '!=', False]])[0].partner_id.name
+                salesperson.partner_id.name
+                ,
+                str(len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))) + ' sales'
+            ])
+
+        return leaderboard
+
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
-        print('En el método >def _action_send_to_user(self, user, tips_count=1, consum_tips=True):< heredado')
-        print(self._compute_kpi_bank_account_value())
+        # print('En el método >def _action_send_to_user(self, user, tips_count=1, consum_tips=True):< heredado')
+        # print(self._compute_kpi_bank_account_value())
+        # print(self._compute_leaderboard_value())
         rendered_body = self.env['mail.render.mixin'].with_context(preserve_comments=True)._render_template(
             # 'digest.digest_mail_main',
             'compounding_mexico_digest_kpis.digest_mail_main_compounding_mexico',
@@ -114,11 +179,12 @@ class Digest(models.Model):
                 'kpi_data': self._compute_kpis(user.company_id, user),
                 'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
                 'preferences': self._compute_preferences(user.company_id, user),
-                'bank_balances': self._compute_kpi_bank_account_value()
+                'bank_balances': self._compute_kpi_bank_account_value(),
+                'leaderboard': self._compute_leaderboard_value()
             },
             post_process=True
         )[self.id]
-        print(rendered_body)
+        # print(rendered_body)
         full_mail = self.env['mail.render.mixin']._render_encapsulate(
             'digest.digest_mail_layout',
             rendered_body,

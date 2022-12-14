@@ -104,7 +104,7 @@
                 <!-- <t t-set="kpi_color">Balances of Bank Accounts</t> -->
                 <span style="vertical-align: left;"><b>Balances of Bank Accounts</b></span>
                 <div class="kpi_row_footer">
-                    <div>
+                    <div style="text-align: center;">
                         <div class="kpi_header">
                             <!-- <span style="vertical-align: left;">Balances of Bank Accounts</span> -->
                             <!-- <a t-if="kpi_info['kpi_action']" t-att-href="'/web#action=%s' % kpi_info['kpi_action']"><span class="button" id="button_open_report">Open Report</span></a> -->
@@ -119,27 +119,36 @@
                                 <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[1]"/>
                             </div>
                         </div> -->
-                        <div class="kpi_cell_border" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
-                            <div>
-                                <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[0]"/>
+                        <div class="kpi_cell_border" style="width: 47.5%; display: inline-block;">
+                            <div t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[0]" style="text-align: center;">
+                                <!-- <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[0]"/> -->
                             </div>
                         </div>
-                        <div class="kpi_cell_center" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
-                            <div>
-                                <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[1]"/>
+                        <div class="kpi_cell_center" style="float: left; width: 47.5%; display: inline-block;">
+                            <div t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[1]" style="text-align: center;">
+                                <!-- <t t-foreach="bank_balances" t-as="bank_balance" t-set="kpi_value" t-esc="bank_balance[1]"/> -->
                             </div>
                         </div>
-                        <!-- <div class="kpi_cell_border" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
-                            <div t-foreach="bank_balances" t-as="bank_balance">
-                                <div t-esc="bank_balance[0]"></div>
-                            </div>
-                        </div>
-                        <div class="kpi_cell_center" style="float: left; width: 50%; text-align: center; padding-top: 2px;">
-                            <div t-foreach="bank_balances" t-as="bank_balance">
-                                <div t-esc="bank_balance[1]"></div>
-                            </div>
-                        </div> -->
                         <div class="kpi_trick" />
+                    </div>
+                </div>
+                <!-- leaderboard -->
+                <span style="vertical-align: left;"><b>Sales Leaderboard</b></span>
+                <div class="kpi_row_footer">
+                    <div style="text-align: center;">
+                        <div class="kpi_header">
+                        </div>
+                        <div class="kpi_cell_border" style="width: 47.50%; display: inline-block;">
+                            <div t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[0]" style="text-align: center;">
+                                <!-- <t t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[0]"/> -->
+                            </div>
+                        </div>
+                        <div class="kpi_cell_center" style="width: 47.50%; display: inline-block;">
+                            <div t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[1]" style="text-align: center;">
+                                <!-- <t t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[1]"/> -->
+                            </div>
+                        </div>
+                        <div class="kpi_trick"/>
                     </div>
                 </div>
             </div>
