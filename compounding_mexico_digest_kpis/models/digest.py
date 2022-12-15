@@ -49,7 +49,8 @@ class Digest(models.Model):
     # kpi_newclient = fields.Boolean(compute="_compute_kpi_newclient_value"),def _compute_kpi_newclient_value()(self):,print('456')
 
     # kpi_new_client = fields.Boolean('Confirmed sales of new clients')
-    kpi_new_client = fields.Boolean('Confirmed New Sales')
+    # kpi_new_client = fields.Boolean('Confirmed New Sales')
+    kpi_new_client = fields.Boolean('Confirmed sales to New Clients')
     kpi_new_client_value = fields.Integer(compute="_compute_kpi_new_client_value")
 
     def _compute_kpi_new_client_value(self):
@@ -151,8 +152,13 @@ class Digest(models.Model):
                 # self.env['res.users'].search([['sale_team_id', '!=', False]])[0].partner_id.name
                 salesperson.partner_id.name
                 ,
-                str(len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))) + ' sales'
+                # str(len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))) + ' sales'
+                len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))
             ])
+
+            # unsorted_list.sort(key=lambda x: x[3])
+            leaderboard.sort(key=lambda x: x[1])
+            leaderboard.reverse()
 
         return leaderboard
 
