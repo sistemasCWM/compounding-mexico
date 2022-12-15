@@ -153,12 +153,16 @@ class Digest(models.Model):
                 salesperson.partner_id.name
                 ,
                 # str(len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))) + ' sales'
-                len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))
+                # len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))
+                sum(sale_order.amount_total for sale_order in self.env['sale.order'].search([['user_id', '=', salesperson.id]]))
             ])
 
             # unsorted_list.sort(key=lambda x: x[3])
             leaderboard.sort(key=lambda x: x[1])
             leaderboard.reverse()
+
+        for leader in leaderboard:
+            leader[1] = '$' + "{0:,.2f}".format(leader[1])
 
         return leaderboard
 
