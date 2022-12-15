@@ -133,7 +133,7 @@
                     </div>
                 </div>
                 <!-- leaderboard -->
-                <span style="vertical-align: left;"><b>Sales Leaderboard</b></span>
+                <span style="vertical-align: left;"><b>Sales Leaderboard (Last 24 hours)</b></span>
                 <div class="kpi_row_footer">
                     <div style="text-align: center;">
                         <div class="kpi_header">
@@ -145,6 +145,44 @@
                         </div>
                         <div class="kpi_cell_center" style="width: 47.50%; display: inline-block;">
                             <div t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[1]" style="text-align: center;">
+                                <!-- <t t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[1]"/> -->
+                            </div>
+                        </div>
+                        <div class="kpi_trick"/>
+                    </div>
+                </div>
+                <!-- leaderboard -->
+                <span style="vertical-align: left;"><b>Sales Leaderboard (Last 7 days)</b></span>
+                <div class="kpi_row_footer">
+                    <div style="text-align: center;">
+                        <div class="kpi_header">
+                        </div>
+                        <div class="kpi_cell_border" style="width: 47.50%; display: inline-block;">
+                            <div t-foreach="leaderboard2" t-as="leader" t-set="kpi_value" t-esc="leader[0]" style="text-align: center;">
+                                <!-- <t t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[0]"/> -->
+                            </div>
+                        </div>
+                        <div class="kpi_cell_center" style="width: 47.50%; display: inline-block;">
+                            <div t-foreach="leaderboard2" t-as="leader" t-set="kpi_value" t-esc="leader[1]" style="text-align: center;">
+                                <!-- <t t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[1]"/> -->
+                            </div>
+                        </div>
+                        <div class="kpi_trick"/>
+                    </div>
+                </div>
+                <!-- leaderboard -->
+                <span style="vertical-align: left;"><b>Sales Leaderboard (Last 30 days)</b></span>
+                <div class="kpi_row_footer">
+                    <div style="text-align: center;">
+                        <div class="kpi_header">
+                        </div>
+                        <div class="kpi_cell_border" style="width: 47.50%; display: inline-block;">
+                            <div t-foreach="leaderboard3" t-as="leader" t-set="kpi_value" t-esc="leader[0]" style="text-align: center;">
+                                <!-- <t t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[0]"/> -->
+                            </div>
+                        </div>
+                        <div class="kpi_cell_center" style="width: 47.50%; display: inline-block;">
+                            <div t-foreach="leaderboard3" t-as="leader" t-set="kpi_value" t-esc="leader[1]" style="text-align: center;">
                                 <!-- <t t-foreach="leaderboard" t-as="leader" t-set="kpi_value" t-esc="leader[1]"/> -->
                             </div>
                         </div>

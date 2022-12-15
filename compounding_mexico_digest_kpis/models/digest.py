@@ -130,7 +130,7 @@ class Digest(models.Model):
 
         return [[x.name, '$' + "{0:,.2f}".format(x._get_journal_bank_account_balance()[0])] for x in self.env['account.journal'].search([['type', '=', 'bank']])]
 
-    def _compute_leaderboard_value(self):
+    def _compute_leaderboard_value(self, start):
 
         leaderboard = []
 
@@ -154,7 +154,11 @@ class Digest(models.Model):
                 ,
                 # str(len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))) + ' sales'
                 # len(self.env['sale.order'].search([['user_id', '=', salesperson.id]]))
-                sum(sale_order.amount_total for sale_order in self.env['sale.order'].search([['user_id', '=', salesperson.id]]))
+                sum(sale_order.amount_total for sale_order in self.env['sale.order'].search([
+                    ['user_id', '=', salesperson.id],
+                    ['date_order', '>=', start],
+                    ['date_order', '<=', datetime.now()],
+                ]))
             ])
 
             # unsorted_list.sort(key=lambda x: x[3])
@@ -190,7 +194,9 @@ class Digest(models.Model):
                 'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
                 'preferences': self._compute_preferences(user.company_id, user),
                 'bank_balances': self._compute_kpi_bank_account_value(),
-                'leaderboard': self._compute_leaderboard_value()
+                'leaderboard': self._compute_leaderboard_value(datetime.now() - relativedelta(days=1)),
+                'leaderboard2': self._compute_leaderboard_value(datetime.now() - relativedelta(days=7)),
+                'leaderboard3': self._compute_leaderboard_value(datetime.now() - relativedelta(days=30))
             },
             post_process=True
         )[self.id]
