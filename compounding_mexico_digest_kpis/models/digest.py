@@ -30,7 +30,7 @@ class Digest(models.Model):
             Showing a list with two columns. The column on the left contains the name of the salesperson and the column on the right total amount of his/her confirmed sales.
     """
     # kpi_quote = fields.Boolean('Confirmed Sales by Salesperson')
-    kpi_quote = fields.Boolean('Confirmed Sales')
+    kpi_quote = fields.Boolean('Confirmed sales')
     kpi_quote_value = fields.Integer(compute="_compute_kpi_quote_value")
 
     def _compute_kpi_quote_value(self):
@@ -50,15 +50,18 @@ class Digest(models.Model):
 
     # kpi_new_client = fields.Boolean('Confirmed sales of new clients')
     # kpi_new_client = fields.Boolean('Confirmed New Sales')
-    kpi_new_client = fields.Boolean('Confirmed sales to New Clients')
+    kpi_new_client = fields.Boolean('Confirmed sales to new clients')
     kpi_new_client_value = fields.Integer(compute="_compute_kpi_new_client_value")
 
     def _compute_kpi_new_client_value(self):
         
         # self.kpi_new_client_value = 456
 
-        start_datetime = datetime.utcnow() + relativedelta(days=-1)
-        end_datetime = datetime.utcnow() + relativedelta(days=+1)
+        # start_datetime = datetime.utcnow() + relativedelta(days=-1)
+        # end_datetime = datetime.utcnow() + relativedelta(days=+1)
+
+        start_datetime = fields.Datetime.to_string(self._context.get('start_datetime') + relativedelta(days=-1))
+        end_datetime = fields.Datetime.to_string(self._context.get('end_datetime') + relativedelta(days=+1))
 
         client_ids = self.env['res.partner'].search_count([('create_date', '>=', start_datetime), ('create_date', '<=', end_datetime)])
 
@@ -169,6 +172,94 @@ class Digest(models.Model):
             leader[1] = '$' + "{0:,.2f}".format(leader[1])
 
         return leaderboard
+
+    # NUEVO 2023 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+
+    """
+    kpi_test = fields.Boolean('Test KPI')
+    kpi_test_value = fields.Integer(compute="_compute_kpi_test_value")
+    def _compute_kpi_test_value(self):
+        self.kpi_test_value = 123
+    """
+
+    """
+    1. Cliente que nunca haya comprado
+    Este puede ser un cliente que sea totalmente nuevo o que ya se haya guardado su contacto pero nunca compró. 
+    En este caso, si fueramos a poner esta info, se pondría también en la sección de clientes nuevos?
+    """
+    kpi_clients_with_no_sales = fields.Boolean('Clientes with no sales')
+    kpi_clients_with_no_sales_value = fields.Integer(compute="_compute_clients_with_no_sales")
+    def _compute_clients_with_no_sales(self):
+        
+        client_ids = []
+        # return clients
+        # self.kpi_clients_with_no_sales_value = 0
+
+        start_datetime = fields.Datetime.to_string(self._context.get('start_datetime'))
+        end_datetime = fields.Datetime.to_string(self._context.get('end_datetime'))
+
+        # print(start_datetime)
+        # print(end_datetime)
+
+        clients = self.env['res.partner'].search([])
+
+        # print(clients)
+        
+        temporal = 0
+
+        for client in clients:
+            
+            # client_ids.append(client.id)
+
+            client_orders = self.env['sale.order'].search_count([('state', '=', 'sent'), ('date_order', '>=', start_datetime), ('date_order', '<', end_datetime), ('partner_id', 'in', [client.id])])
+
+            if type(client_orders) == int:
+                if client_orders == 0:
+                    temporal += 1
+
+        # print(client_ids)
+
+        self.kpi_clients_with_no_sales_value = temporal
+
+    """
+    2. Cliente que ha sido registrado en el transcurso del mes
+    Parece que sí se podría y ya su compra se reflejaría en la temporalidad que ya está definida en el reporte (1, 7 y 30 días). 
+    """
+
+    kpi_clients_with_sales = fields.Boolean('Clientes with sales')
+    kpi_clients_with_sales_value = fields.Integer(compute="_compute_clients_with_sales")
+    def _compute_clients_with_sales(self):
+
+        start_datetime = fields.Datetime.to_string(self._context.get('start_datetime'))
+        end_datetime = fields.Datetime.to_string(self._context.get('end_datetime'))
+
+        clients = self.env['res.partner'].search([('create_date', '>=', start_datetime), ('create_date', '<=', end_datetime)])
+
+        print('\/')
+        print(clients)
+        print(type(clients))
+        print('^')
+
+        clients_amount = len(clients)
+
+        print('\/')
+        print(clients_amount)
+        print(type(clients_amount))
+        print('^')
+
+        
+        self.kpi_clients_with_sales_value = clients_amount
+
+    """
+    3. el Plus
+    Para este caso, también estás de acuerdo que esa información se coloque en la sección de clientes nuevos?
+    """
+    # SOLO COMENTARIO
+    """
+    En resumen, algunos de los casos de los 3 puntos anteriores no son extrictamente clientes nuevos, estás de acuerdo que las estadísticas caigan dentro de la sección de clientes nuevos?
+    """
+    # 
+    # #### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
         # print('En el método >def _action_send_to_user(self, user, tips_count=1, consum_tips=True):< heredado')
