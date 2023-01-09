@@ -235,20 +235,28 @@ class Digest(models.Model):
 
         clients = self.env['res.partner'].search([('create_date', '>=', start_datetime), ('create_date', '<=', end_datetime)])
 
-        print('\/')
-        print(clients)
-        print(type(clients))
-        print('^')
+        # print('\/')
+        # print(clients)
+        # print(type(clients))
+        # print('^')
 
         clients_amount = len(clients)
 
-        print('\/')
-        print(clients_amount)
-        print(type(clients_amount))
-        print('^')
+        # print('\/')
+        # print(clients_amount)
+        # print(type(clients_amount))
+        # print('^')
+
+        temporal = 0
+
+        for client in clients:
+            client_orders = self.env['sale.order'].search_count([('state', '=', 'sent'), ('date_order', '>=', start_datetime), ('date_order', '<', end_datetime), ('partner_id', 'in', [client.id])])
+            if type(client_orders) == int:
+                if client_orders > 0:
+                    temporal += 1
 
         
-        self.kpi_clients_with_sales_value = clients_amount
+        self.kpi_clients_with_sales_value = temporal
 
     """
     3. el Plus
