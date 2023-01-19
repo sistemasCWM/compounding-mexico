@@ -53,21 +53,27 @@ class Digest(models.Model):
             record.kpi_quote_value = quote
 
     # KPI
-    kpi_new_client = fields.Boolean('Confirmed sales to new clients')
+    kpi_new_client = fields.Boolean('Confirmed sales of new clients')
     kpi_new_client_value = fields.Integer(compute="_compute_kpi_new_client_value")
 
     def _compute_kpi_new_client_value(self):
 
         start_datetime = fields.Datetime.to_string(self._context.get('start_datetime') + relativedelta(days=-1))
         end_datetime = fields.Datetime.to_string(self._context.get('end_datetime') + relativedelta(days=+1))
-        client_ids = self.env['res.partner'].search_count([('create_date', '>=', start_datetime), ('create_date', '<=', end_datetime)])
+        clients = self.env['res.partner'].search([('create_date', '>=', start_datetime), ('create_date', '<=', end_datetime)])
+        client_ids = []
 
-        if type(client_ids) == int:
-            client_ids = [client_ids]
+        for client in clients:
+            client_ids.append(client.id)
 
         for record in self:
+            
             start, end, company = record._get_kpi_compute_parameters()
-            new_client = self.env['sale.order'].search_count([('state', '=', 'sale'), ('date_order', '>=', start), ('date_order', '<', end), ('partner_id', 'in', client_ids)])
+            
+            new_client = self.env['sale.order'].search_count([('state', '=', 'sale'), ('partner_id', 'in', client_ids)])
+            # ('date_order', '>=', start), ('date_order', '<', end)
+            # ('date_order', '>=', start_datetime), ('date_order', '<', end_datetime)
+
             record.kpi_new_client_value = new_client
 
     # KPI
@@ -106,12 +112,11 @@ class Digest(models.Model):
     En este caso, si fueramos a poner esta info, se pondría también en la sección de clientes nuevos?
     """
 
-    kpi_clients_with_no_sales = fields.Boolean('Clientes with no sales')
+    kpi_clients_with_no_sales = fields.Boolean('Clients with no sales')
     kpi_clients_with_no_sales_value = fields.Integer(compute="_compute_clients_with_no_sales")
 
     def _compute_clients_with_no_sales(self):
-        
-        client_ids = []
+
         start_datetime = fields.Datetime.to_string(self._context.get('start_datetime'))
         end_datetime = fields.Datetime.to_string(self._context.get('end_datetime'))
         clients = self.env['res.partner'].search([])
@@ -134,13 +139,15 @@ class Digest(models.Model):
     Parece que sí se podría y ya su compra se reflejaría en la temporalidad que ya está definida en el reporte (1, 7 y 30 días). 
     """
 
-    kpi_clients_with_sales = fields.Boolean('Clientes with sales')
+    kpi_clients_with_sales = fields.Boolean('Clients with sales')
     kpi_clients_with_sales_value = fields.Integer(compute="_compute_clients_with_sales")
+
     def _compute_clients_with_sales(self):
 
         start_datetime = fields.Datetime.to_string(self._context.get('start_datetime'))
         end_datetime = fields.Datetime.to_string(self._context.get('end_datetime'))
-        clients = self.env['res.partner'].search([('create_date', '>=', start_datetime), ('create_date', '<=', end_datetime)])
+        # clients = self.env['res.partner'].search([('create_date', '>=', start_datetime), ('create_date', '<=', end_datetime)])
+        clients = self.env['res.partner'].search([])
         clients_amount = len(clients)
         temporal = 0
 
