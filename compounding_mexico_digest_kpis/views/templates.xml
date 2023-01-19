@@ -9,8 +9,6 @@
             <xpath expr="//field[@name='kpi_mail_message_total']" position="after">
                 <field name="kpi_quote"/>
                 <field name="kpi_new_client"/>
-                <!-- <field name="kpi_bank_account"/> -->
-                <!-- <field name="kpi_test"/> -->
                 <field name="kpi_clients_with_no_sales"/>
                 <field name="kpi_clients_with_sales"/>
             </xpath>
