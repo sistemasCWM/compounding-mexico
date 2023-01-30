@@ -15,34 +15,12 @@ from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 
-# from odoo.addons import account
-
 class Digest(models.Model):
 
     _inherit = 'digest.digest'
 
     inherit_test = fields.Char(string='Inherit Test', required=False, translate=True)
-    
-    """
-    1) Feature 1
-    KPI no. 1
-        Confirmed Sales by Salesperson
-            Showing a list with two columns. The column on the left contains the name of the salesperson and the column on the right total amount of his/her confirmed sales.
 
-    2) Feature 2
-    KPI no. 2
-        Confirmed sales of new clients
-            Show an aggregate of all the confirmed sales from new clients
-    
-    3) Feature 3
-    KPI no.3
-    Bank account balance in General Ledger
-        Show the balance in General Ledger for each bank account set up in the Accounting App.
-        Be ready to include more accounts if they were to be added in the future
-        Be ready to not show previous accounts if they get deleted.
-    """
-
-    # KPI
     kpi_quote = fields.Boolean('Confirmed sales')
     kpi_quote_value = fields.Integer(compute="_compute_kpi_quote_value")
 
@@ -52,7 +30,6 @@ class Digest(models.Model):
             quote = self.env['sale.order'].search_count([('state', '=', 'sale'), ('date_order', '>=', start), ('date_order', '<', end)])
             record.kpi_quote_value = quote
 
-    # KPI
     kpi_new_client = fields.Boolean('Confirmed sales of new clients')
     kpi_new_client_value = fields.Integer(compute="_compute_kpi_new_client_value")
 
@@ -67,20 +44,13 @@ class Digest(models.Model):
             client_ids.append(client.id)
 
         for record in self:
-            
             start, end, company = record._get_kpi_compute_parameters()
-            
             new_client = self.env['sale.order'].search_count([('state', '=', 'sale'), ('partner_id', 'in', client_ids)])
-            # ('date_order', '>=', start), ('date_order', '<', end)
-            # ('date_order', '>=', start_datetime), ('date_order', '<', end_datetime)
-
             record.kpi_new_client_value = new_client
 
-    # KPI
     def _compute_kpi_bank_account_value(self):
         return [[x.name, '$' + "{0:,.2f}".format(x._get_journal_bank_account_balance()[0])] for x in self.env['account.journal'].search([['type', '=', 'bank']])]
 
-    # KPI
     def _compute_leaderboard_value(self, start):
 
         leaderboard = []
@@ -104,14 +74,6 @@ class Digest(models.Model):
 
         return leaderboard
 
-    # KPI
-
-    """
-    1. Cliente que nunca haya comprado
-    Este puede ser un cliente que sea totalmente nuevo o que ya se haya guardado su contacto pero nunca compró. 
-    En este caso, si fueramos a poner esta info, se pondría también en la sección de clientes nuevos?
-    """
-
     kpi_clients_with_no_sales = fields.Boolean('Clients with no sales')
     kpi_clients_with_no_sales_value = fields.Integer(compute="_compute_clients_with_no_sales")
 
@@ -132,13 +94,6 @@ class Digest(models.Model):
 
         self.kpi_clients_with_no_sales_value = temporal
 
-    # KPI
-
-    """
-    2. Cliente que ha sido registrado en el transcurso del mes
-    Parece que sí se podría y ya su compra se reflejaría en la temporalidad que ya está definida en el reporte (1, 7 y 30 días). 
-    """
-
     kpi_clients_with_sales = fields.Boolean('Clients with sales')
     kpi_clients_with_sales_value = fields.Integer(compute="_compute_clients_with_sales")
 
@@ -146,7 +101,6 @@ class Digest(models.Model):
 
         start_datetime = fields.Datetime.to_string(self._context.get('start_datetime'))
         end_datetime = fields.Datetime.to_string(self._context.get('end_datetime'))
-        # clients = self.env['res.partner'].search([('create_date', '>=', start_datetime), ('create_date', '<=', end_datetime)])
         clients = self.env['res.partner'].search([])
         clients_amount = len(clients)
         temporal = 0
