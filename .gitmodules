@@ -1,0 +1,3 @@
+[submodule "compounding-mexico"]
+	path = compounding-mexico
+	url = git@github.com:sistemasCWM/compounding-mexico.git
