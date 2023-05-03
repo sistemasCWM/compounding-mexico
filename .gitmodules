@@ -1,3 +1,7 @@
 [submodule "compounding-mexico"]
 	path = compounding-mexico
 	url = git@github.com:sistemasCWM/compounding-mexico.git
+[submodule "product_custom_label"]
+	path = product_custom_label
+	url = git@github.com:sistemasCWM/compounding-mexico.git
+	branch = sandbox
