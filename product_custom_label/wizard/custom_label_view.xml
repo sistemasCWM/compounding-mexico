@@ -1,0 +1,190 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="product_custom_label_list">
+            <field name="name">Product Custom Label List</field>
+            <field name="model">product.custom.label.wizard</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="template_id"/>
+                    <field name="is_default"/>
+                    <field name="template_for"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="product_custom_label_form">
+            <field name="name">Product Custom Label form</field>
+            <field name="model">product.custom.label.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <style>
+                            .o_form_view .o_group{
+                            margin:0px 0px !important;}
+                        </style>
+
+                        <group>
+                            <group>
+                                <field name="template_id" options="{'no_create': True,'no_edit':True,'no_open':True}"
+                                       domain="[('template_for','=',context.get('current_model'))]"/>
+                            </group>
+                            <group>
+                                <field name="edit_template" widget="boolean_toggle"/>
+                                <field name="is_print_lot" string="Include LOT" widget="boolean_toggle"/>
+                                <field name="is_default" string="Default" widget="boolean_toggle" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="template_for" invisible="1"/>
+                            </group>
+                        </group>
+                        <group string="Logo" attrs="{'invisible':[('edit_template','=',False)]}">
+                            <group>
+                                <field name="logo" widget='image' class="oe_avatar "
+                                       title="LOGO"/>
+                            </group>
+                            <group string=" " attrs="{'invisible':[('edit_template','=',False)]}">
+                                <field name="logo_height"/>
+                                <field name="logo_width"/>
+                            </group>
+                        </group>
+                        <group>
+
+                            <group string="Barcode" attrs="{'invisible':[('edit_template','=',False)]}">
+                                <field name="barcode_type"/>
+                                <field name="human_readability" widget="boolean_toggle"/>
+                                <field name="barcode_quiet" widget="boolean_toggle"/>
+                                <field name="barcode_width"/>
+                                <field name="barcode_height"/>
+
+
+                            </group>
+
+                            <group string="Page Layout" attrs="{'invisible':[('edit_template','=',False)]}">
+
+                                <field name="label_align" widget="radio" options="{'horizontal': true}"/>
+                                <field name="quantity"/>
+                                <field name="orientation"/>
+                                <field name="format"/>
+                                <field name="page_height" readonly="0"
+                                       attrs="{'invisible':['|',('edit_template','=',False),('format','!=','custom')]}"/>
+                                <field name="page_width" readonly="0"
+                                       attrs="{'invisible':['|',('edit_template','=',False),('format','!=','custom')]}"/>
+
+
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Products Variants"
+                                  attrs="{'invisible':[('template_for','=','product.template')]}">
+                                <field name="product_active_ids"
+                                       options="{'no_create': True,'no_edit':True,'no_open':True}"
+                                       widget="many2many_tags"/>
+
+                            </page>
+                            <page string="Products"
+                                  attrs="{'invisible':[('template_for','=','product.product')]}">
+                                <field name="template_active_ids"
+                                       options="{'no_create': True,'no_edit':True,'no_open':True}"
+                                       widget="many2many_tags"/>
+
+                            </page>
+
+                            <page string="Fields on Label" attrs="{'invisible':[('edit_template','=',False)]}">
+                                <field name="field_line_tran_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="field_name" required="1"
+                                               domain="[('model_id.model','=',parent.template_for)]"/>
+                                        <field name="font_size" string="Font Size(px)"/>
+                                        <field name="color" widget="color"/>
+                                        <field name="bold" widget="boolean_toggle"/>
+                                        <field name="italic" widget="boolean_toggle"/>
+                                        <field name="underline" widget="boolean_toggle"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Product LOTs" attrs="{'invisible':[('is_print_lot','=',False)]}">
+                                <group>
+                                    <group>
+                                        <field name="lot_font" string="Font Size"/>
+                                        <field name="print_lot_seq" string="Print LOT Number" widget="boolean_toggle"/>
+                                    </group>
+                                    <group>
+                                        <field name="lot_color" string="Color" widget="color"/>
+                                        <field name="print_lot_barcode" string="Print LOT Barcode"
+                                               widget="boolean_toggle"/>
+                                    </group>
+                                </group>
+                                <div class="alert alert-info">
+                                    <strong>
+                                        <i class="fa fa-info-circle"/>
+                                        Select LOTs for products, if need to print their LOT(Number or Barcode) in
+                                        label.
+                                        For each LOT it will print a separate label.
+                                    </strong>
+                                </div>
+                                <field name="product_variant_lot_ids"
+                                       attrs="{'invisible':[('template_for','=','product.template')]}">
+                                    <tree editable="bottom" create="0" edit="0" delete="0">
+                                        <field name="product_variant_id" options="{'no_open':True}" readonly="1"
+                                               force_save="1"/>
+                                        <field name="product_lot_ids"
+                                               options="{'no_create_edit':True,'no_quick_create':True}"
+                                               domain="[('product_id','=',product_variant_id)]"
+                                               widget="many2many_tags"/>
+                                    </tree>
+                                </field>
+                                <field name="product_template_lot_ids"
+                                       attrs="{'invisible':[('template_for','=','product.product')]}">
+                                    <tree editable="bottom" create="0" edit="0" delete="0">
+                                        <field name="product_template_id" options="{'no_open':True}" readonly="1"
+                                               force_save="1"/>
+                                        <field name="product_lot_ids"
+                                               options="{'no_create_edit':True,'no_quick_create':True}"
+                                               domain="[('product_id.product_tmpl_id','=',product_template_id)]"
+                                               widget="many2many_tags"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button name='product_print_label' type="object" string="Print" class="oe_highlight"
+                                attrs="{'invisible':[('template_for','=','product.template')]}"/>
+                        <button name='template_print_label' type="object" string="Print" class="oe_highlight"
+                                attrs="{'invisible':[('template_for','=','product.product')]}"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="custom_label_view_server_action" model="ir.actions.server">
+            <field name="name">Product Custom Label</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="groups_id" eval="[(4, ref('product_custom_label.product_custom_label_security_group'))]"/>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.open_custom_label_wizard()
+            </field>
+        </record>
+
+        <record id="custom_label_view_server_action_template" model="ir.actions.server">
+            <field name="name">Product Custom Label</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="groups_id" eval="[(4, ref('product_custom_label.product_custom_label_security_group'))]"/>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.open_custom_label_wizard()
+            </field>
+        </record>
+    </data>
+
+</odoo>
