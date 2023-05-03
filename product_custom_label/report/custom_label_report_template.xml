@@ -1,0 +1,228 @@
+<odoo>
+    <data>
+        <template id="report_custom_label_product">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs.product_variant_lot_ids" t-as="lot_line">
+                    <t t-foreach="docs.quantity" t-as="label">
+                        <t t-if="lot_line.product_lot_ids and docs.is_print_lot">
+                            <t t-foreach="lot_line.product_lot_ids" t-as="product_lot_id">
+                                <div style="display:table; margin:0;width:100%">
+                                    <div style="margin:auto;margin-top:20px;margin-bottom:20px;border:1px solid black;text-align: center; padding-left:10px;padding-right:10px; "
+                                         width="100%">
+                                        <table class="container"
+                                               t-attf-style="text-align:#{docs.label_align};  margin:auto;"
+                                               width="100%">
+                                            <tr t-if="docs.logo">
+                                                <td>
+                                                        <img t-att-src="image_data_uri(docs.logo)"
+                                                             t-attf-width="#{docs.logo_width}px"
+                                                             t-attf-height="#{docs.logo_height}px"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="docs.print_lot_seq">
+                                                <td>
+                                                        <span t-attf-style="color:#{docs.lot_color};font-size:#{docs.lot_font}px">
+                                                            <t t-esc="product_lot_id.name"/>
+                                                        </span>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="docs.print_lot_barcode">
+                                                <td>
+                                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=%s&amp;quiet=%s' % (docs.barcode_type, product_lot_id.name,docs.barcode_width, docs.barcode_height,int(docs.human_readability),int(docs.barcode_quiet))"/>
+                                                </td>
+                                            </tr>
+
+                                            <t t-foreach="docs.field_line_tran_ids" t-as="field_id">
+                                                <tr>
+                                                    <td style="padding:5px">
+                                                        <t t-if="field_id.field_name.name in ['lst_price','standard_price','list_price']">
+                                                            <span t-attf-style="color:#{field_id.color};text-decoration: #{'underline !important' if field_id.underline else ''};font-weight: #{'bold' if field_id.bold else ''};font-style: #{'italic' if field_id.italic else ''};font-size:#{field_id.font_size}px"
+                                                                  t-esc="lot_line.product_variant_id.get_field_value(field_id.field_name)"
+                                                                  t-options="{'widget':'monetary','display_currency':(docs.currency_id)}">
+                                                            </span>
+                                                        </t>
+                                                        <t t-elif="field_id.field_name.name =='barcode'">
+                                                            <t t-if="lot_line.product_variant_id.barcode">
+                                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=%s&amp;quiet=%s' % (docs.barcode_type, lot_line.product_variant_id.barcode,docs.barcode_width, docs.barcode_height,int(docs.human_readability),int(docs.barcode_quiet))"/>
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-attf-style="color:#{field_id.color};text-decoration: #{'underline !important' if field_id.underline else ''};font-weight: #{'bold' if field_id.bold else ''};font-style: #{'italic' if field_id.italic else ''};font-size:#{field_id.font_size}px">
+                                                                <t t-esc="lot_line.product_variant_id.get_field_value(field_id.field_name)"/>
+                                                            </span>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </div>
+                                </div>
+                                <p style="page-break-after:always;margin:0;padding:0"/>
+                            </t>
+                        </t>
+
+                        <t t-else="">
+                            <div style="display:table; margin:auto;width:100%">
+                                <div style="margin:auto;margin-top:20px;margin-bottom:20px;border:1px solid black;text-align: center; padding-left:10px;padding-right:10px; "
+                                     width="100%">
+                                    <table class="container"
+                                           t-attf-style="text-align:#{docs.label_align};  margin:auto;"
+                                           width="100%">
+                                        <tr>
+                                            <td>
+                                                <t t-if="docs.logo">
+                                                    <img t-att-src="image_data_uri(docs.logo)"
+                                                         t-attf-width="#{docs.logo_width}px"
+                                                         t-attf-height="#{docs.logo_height}px"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="docs.field_line_tran_ids" t-as="field_id">
+                                            <tr>
+                                                <td style="padding:5px">
+                                                    <t t-if="field_id.field_name.name in ['lst_price','standard_price','list_price']">
+                                                        <span t-attf-style="color:#{field_id.color};text-decoration: #{'underline !important' if field_id.underline else ''};font-weight: #{'bold' if field_id.bold else ''};font-style: #{'italic' if field_id.italic else ''};font-size:#{field_id.font_size}px"
+                                                              t-esc="lot_line.product_variant_id.get_field_value(field_id.field_name)"
+                                                              t-options="{'widget':'monetary','display_currency':(docs.currency_id)}">
+                                                        </span>
+                                                    </t>
+                                                    <t t-elif="field_id.field_name.name =='barcode'">
+                                                        <t t-if="lot_line.product_variant_id.barcode">
+                                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=%s&amp;quiet=%s' % (docs.barcode_type, lot_line.product_variant_id.barcode,docs.barcode_width, docs.barcode_height,int(docs.human_readability),int(docs.barcode_quiet))"/>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-attf-style="color:#{field_id.color};text-decoration: #{'underline !important' if field_id.underline else ''};font-weight: #{'bold' if field_id.bold else ''};font-style: #{'italic' if field_id.italic else ''};font-size:#{field_id.font_size}px">
+                                                            <t t-esc="lot_line.product_variant_id.get_field_value(field_id.field_name)"/>
+                                                        </span>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </div>
+                            <p style="page-break-after:always;margin:0;padding:0"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_custom_label_template">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs.product_template_lot_ids" t-as="lot_line">
+                    <t t-foreach="docs.quantity" t-as="label">
+                        <t t-if="lot_line.product_lot_ids and docs.is_print_lot">
+                            <t t-foreach="lot_line.product_lot_ids" t-as="product_lot_id">
+                                <div style="display:table; margin:auto;width:100%">
+                                    <div style="margin:auto;margin-top:20px;margin-bottom:20px;border:1px solid black;text-align: center; padding-left:10px;padding-right:10px; "
+                                         width="100%">
+                                        <table class="container"
+                                               t-attf-style="text-align:#{docs.label_align};  margin:auto;"
+                                               width="100%">
+                                            <tr>
+                                                <td>
+                                                    <t t-if="docs.logo">
+                                                        <img t-att-src="image_data_uri(docs.logo)"
+                                                             t-attf-width="#{docs.logo_width}px"
+                                                             t-attf-height="#{docs.logo_height}px"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <t t-if="docs.print_lot_seq">
+                                                        <span t-attf-style="color:#{docs.lot_color};font-size:#{docs.lot_font}px">
+
+                                                            <t t-esc="product_lot_id.name"/>
+                                                        </span>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <t t-if="docs.print_lot_barcode">
+                                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=%s&amp;quiet=%s' % (docs.barcode_type, product_lot_id.name,docs.barcode_width, docs.barcode_height,int(docs.human_readability),int(docs.barcode_quiet))"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+
+                                            <t t-foreach="docs.field_line_tran_ids" t-as="field_id">
+                                                <tr>
+                                                    <td style="padding:5px">
+                                                        <t t-if="field_id.field_name.name in ['lst_price','standard_price','list_price']">
+                                                            <span t-attf-style="color:#{field_id.color};text-decoration: #{'underline !important' if field_id.underline else ''};font-weight: #{'bold' if field_id.bold else ''};font-style: #{'italic' if field_id.italic else ''};font-size:#{field_id.font_size}px"
+                                                                  t-esc="lot_line.product_template_id.get_field_value(field_id.field_name)"
+                                                                  t-options="{'widget':'monetary','display_currency':(docs.currency_id)}">
+                                                            </span>
+                                                        </t>
+                                                        <t t-elif="field_id.field_name.name =='barcode'">
+                                                            <t t-if="lot_line.product_template_id.barcode">
+                                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=%s&amp;quiet=%s' % (docs.barcode_type, lot_line.product_template_id.barcode,docs.barcode_width, docs.barcode_height,int(docs.human_readability),int(docs.barcode_quiet))"/>
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-attf-style="color:#{field_id.color};text-decoration: #{'underline !important' if field_id.underline else ''};font-weight: #{'bold' if field_id.bold else ''};font-style: #{'italic' if field_id.italic else ''};font-size:#{field_id.font_size}px">
+                                                                <t t-esc="lot_line.product_template_id.get_field_value(field_id.field_name)"/>
+                                                            </span>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </div>
+                                </div>
+                                <p style="page-break-after:always;margin:0;padding:0"/>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <div style="display:table; margin:auto;width:100%">
+                                <div style="margin:auto;margin-top:20px;margin-bottom:20px;border:1px solid black;text-align: center; padding-left:10px;padding-right:10px; "
+                                     width="100%">
+                                    <table class="container"
+                                           t-attf-style="text-align:#{docs.label_align};  margin:auto;"
+                                           width="100%">
+                                        <tr>
+                                            <td>
+                                                <t t-if="docs.logo">
+                                                    <img t-att-src="image_data_uri(docs.logo)"
+                                                         t-attf-width="#{docs.logo_width}px"
+                                                         t-attf-height="#{docs.logo_height}px"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="docs.field_line_tran_ids" t-as="field_id">
+                                            <tr>
+                                                <td style="padding:5px">
+                                                    <t t-if="field_id.field_name.name in ['lst_price','standard_price','list_price']">
+                                                        <span t-attf-style="color:#{field_id.color};text-decoration: #{'underline !important' if field_id.underline else ''};font-weight: #{'bold' if field_id.bold else ''};font-style: #{'italic' if field_id.italic else ''};font-size:#{field_id.font_size}px"
+                                                              t-esc="lot_line.product_template_id.get_field_value(field_id.field_name)"
+                                                              t-options="{'widget':'monetary','display_currency':(docs.currency_id)}">
+                                                        </span>
+                                                    </t>
+                                                    <t t-elif="field_id.field_name.name =='barcode'">
+                                                        <t t-if="lot_line.product_template_id.barcode">
+                                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=%s&amp;quiet=%s' % (docs.barcode_type, lot_line.product_template_id.barcode,docs.barcode_width, docs.barcode_height,int(docs.human_readability),int(docs.barcode_quiet))"/>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-attf-style="color:#{field_id.color};text-decoration: #{'underline !important' if field_id.underline else ''};font-weight: #{'bold' if field_id.bold else ''};font-style: #{'italic' if field_id.italic else ''};font-size:#{field_id.font_size}px">
+                                                            <t t-esc="lot_line.product_template_id.get_field_value(field_id.field_name)"/>
+                                                        </span>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <p style="page-break-after:always;margin:0;padding:0"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

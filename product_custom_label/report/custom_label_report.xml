@@ -1,0 +1,130 @@
+<odoo>
+    <data>
+
+        <record id="product_custom_label_paperformat" model="report.paperformat">
+            <field name="name">Print Custom Label</field>
+            <field name="default" eval="True"/>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="margin_top">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+        <record id="template_custom_label_report" model="ir.actions.report">
+            <field name="name">Template Custom Label</field>
+            <field name="model">product.custom.label.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product_custom_label.report_custom_label_template</field>
+            <field name="report_file">product_custom_label.report_custom_label_template</field>
+            <field name="paperformat_id" ref="product_custom_label.product_custom_label_paperformat"/>
+        </record>
+
+        <record id="product_custom_label_report" model="ir.actions.report">
+            <field name="name">Product Custom Label</field>
+            <field name="model">product.custom.label.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product_custom_label.report_custom_label_product</field>
+            <field name="report_file">product_custom_label.report_custom_label_product</field>
+            <field name="paperformat_id" ref="product_custom_label.product_custom_label_paperformat"/>
+        </record>
+
+        <template id="product_custom_label_print_preview_template">
+            <t t-call="web.basic_layout">
+                <div style="display:table; margin:0;width:100%">
+                    <div style="margin:auto;margin-top:20px;margin-bottom:20px;border:1px solid black;text-align: center; padding-left:10px;padding-right:10px; "
+                         width="100%">
+                        <table class="container"
+                               t-attf-style="text-align:#{docs.label_align};  margin:auto;"
+                               width="100%">
+                            <tr>
+                                <td>
+                                    <t t-if="docs.logo">
+                                        <img t-att-src="image_data_uri(docs.logo)"
+                                             t-attf-width="#{docs.logo_width}px"
+                                             t-attf-height="#{docs.logo_height}px"/>
+                                    </t>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <t t-if="docs.print_lot_seq">
+                                        <span t-attf-style="color:#{docs.lot_color};font-size:#{docs.lot_font}px">
+                                            [Product_LOT(0000000)]
+                                        </span>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <t t-if="docs.print_lot_barcode">
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=%s&amp;quiet=%s' % (docs.barcode_type, docs.barcode_type,docs.barcode_width, docs.barcode_height,int(docs.human_readability),int(docs.barcode_quiet))"/>
+                                    </t>
+                                </td>
+                            </tr>
+
+
+                            <t t-if="docs.field_line_ids">
+                                <t t-foreach="docs.field_line_ids" t-as="field_line_id">
+                                    <tr>
+                                        <td style="padding:5px">
+                                            <t t-if="field_line_id.field_name.name in ['lst_price','standard_price','list_price']">
+                                                <span t-attf-style="color:#{field_line_id.color};text-decoration: #{'underline !important' if field_line_id.underline else ''};font-weight: #{'bold' if field_line_id.bold else ''};font-style: #{'italic' if field_line_id.italic else ''};font-size:#{field_line_id.font_size}px"
+                                                      t-esc="'['+field_line_id.field_name.field_description+']'">
+                                                </span>
+                                            </t>
+                                            <t t-elif="field_line_id.field_name.name =='barcode'">
+
+                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=%s&amp;quiet=%s' % (docs.barcode_type, docs.barcode_type,docs.barcode_width, docs.barcode_height,int(docs.human_readability),int(docs.barcode_quiet))"/>
+
+                                            </t>
+                                            <t t-else="">
+
+                                                <span t-attf-style="color:#{field_line_id.color};text-decoration: #{'underline !important' if field_line_id.underline else ''};font-weight: #{'bold' if field_line_id.bold else ''};font-style: #{'italic' if field_line_id.italic else ''};font-size:#{field_line_id.font_size}px">
+                                                    <t t-esc="'['+field_line_id.field_name.field_description+']'"
+                                                    />
+                                                </span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <tr>
+                                    <td>
+                                        <span t-attf-style="color:#FF0000;text-decoration: underline;font-weight: bold;font-style: italic;font-size:20px">
+                                            No Fields are selected.
+                                        </span>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <record id="product_custom_label_preview_paperformat" model="report.paperformat">
+            <field name="name">Custom Label Preview</field>
+            <field name="default" eval="True"/>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="margin_top">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="product_custom_label_print_preview_report" model="ir.actions.report">
+            <field name="name">Product Custom Label Print Preview</field>
+            <field name="model">print.format.template</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product_custom_label.product_custom_label_print_preview_template</field>
+            <field name="report_file">product_custom_label.product_custom_label_print_preview_template</field>
+            <field name="paperformat_id" ref="product_custom_label.product_custom_label_preview_paperformat"/>
+        </record>
+    </data>
+</odoo>
