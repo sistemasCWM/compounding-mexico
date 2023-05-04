@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="cwm.list">
+      <field name="name">CWM list</field>
+      <field name="model">cwm.cwm</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="cwm.action_window">
+      <field name="name">CWM window</field>
+      <field name="res_model">cwm.cwm</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="cwm.action_server">
+      <field name="name">CWM server</field>
+      <field name="model_id" ref="model_cwm_cwm"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="CWM" id="cwm.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="cwm.menu_1" parent="cwm.menu_root"/>
+    <menuitem name="Menu 2" id="cwm.menu_2" parent="cwm.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="cwm.menu_1_list" parent="cwm.menu_1"
+              action="cwm.action_window"/>
+    <menuitem name="Server to list" id="cwm" parent="cwm.menu_2"
+              action="cwm.action_server"/>
+-->
+  </data>
+</odoo>
