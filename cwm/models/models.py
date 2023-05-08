@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo import models, fields, api
 
-# from odoo import models, fields, api
 
-
-# class cwm(models.Model):
-#     _name = 'cwm.cwm'
-#     _description = 'cwm.cwm'
+class cwm(models.Model):
+    _name = 'cwm.cwm'
+    _description = 'cwm.cwm'
 
 #     name = fields.Char()
 #     value = fields.Integer()
