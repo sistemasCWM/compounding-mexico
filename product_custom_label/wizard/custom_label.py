@@ -64,9 +64,7 @@ class CustomLabelWizard(models.TransientModel):
             self.barcode_height = self.barcode_width
 
     def product_print_label(self):
-        paper_format = self.env['ir.model.data'].xmlid_to_object(
-            'product_custom_label.product_custom_label_paperformat')
-
+        paper_format = self.env['ir.model.data'].xmlid_to_object('product_custom_label.product_custom_label_paperformat')
         paper_format.page_height = False
         paper_format.page_width = False
         paper_format.format = self.format
