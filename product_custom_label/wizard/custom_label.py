@@ -76,9 +76,7 @@ class CustomLabelWizard(models.TransientModel):
         return self.env.ref('product_custom_label.product_custom_label_report').report_action(self, {})
 
     def template_print_label(self):
-        paper_format = self.env['ir.model.data'].xmlid_to_object(
-            'product_custom_label.product_custom_label_paperformat')
-
+        paper_format = self.env['ir.model.data'].xmlid_to_object('product_custom_label.product_custom_label_paperformat')
         paper_format.page_height = False
         paper_format.page_width = False
         paper_format.format = self.format
