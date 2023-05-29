@@ -1,11 +1,15 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # compounding-mexico
 =======
 # COMPOUNDING WHOLESALERS OF MEXICO (psus-compounding-wholesalers)
 =======
 # Company Name (psus-reponame)
 >>>>>>> fc0bd09 (Initial commit)
+=======
+# COMPOUNDING WHOLESALERS OF MEXICO (psus-compounding-wholesalers)
+>>>>>>> 2b8c012 ([INIT] init repo)
 
 ## Branches :
 - SH Production Branch  : **_production_**
