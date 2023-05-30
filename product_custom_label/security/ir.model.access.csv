@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_print_format_template,print_format_template,model_print_format_template,,1,1,1,1
-access_field_line,field_line,model_field_line,,1,1,1,1
-access_product_custom_label_wizard,product_custom_label_wizard,model_product_custom_label_wizard,,1,1,1,1
-access_field_line_wizard,field_line_wizard,model_field_line_wizard,,1,1,1,1
-access_lot_lines,lot_lines,model_lot_lines,,1,1,1,1
